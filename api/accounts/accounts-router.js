@@ -24,18 +24,12 @@ router.post(
   "/",
   middlewares.checkAccountPayload,
   middlewares.checkAccountNameUnique,
-  (req, res, next) => {
-    const { name, budget } = req.body;
-    if (!name && !budget) {
-      res.status(400).json({
-        message: "Please provide some info for the account",
-      });
-    } else {
-      Account.create({ name, budget })
-        .then((newAcc) => {
-          res.status(201).json(newAcc);
-        })
-        .catch(next);
+  async (req, res, next) => {
+    try{
+      const newAcc = await Account.create(req.body)
+      res.status(201).json(newAcc)
+    } catch (err){
+      next(err)
     }
   }
 );
