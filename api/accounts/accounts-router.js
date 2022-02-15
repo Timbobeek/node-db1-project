@@ -29,7 +29,18 @@ router.get('/:id', (req, res, next) => {
 })
 
 router.post('/', (req, res, next) => {
-  // DO YOUR MAGIC
+  const { name, budget } = req.body;
+  if (!name && !budget) {
+    res.status(400).json({
+      message: "Please provide some info for the account",
+    });
+  } else {
+    Account.create({ name, budget })
+      .then((newAcc) => {
+        res.status(201).json(newAcc);
+      })
+      .catch(next);
+  }
 })
 
 router.put('/:id', (req, res, next) => {

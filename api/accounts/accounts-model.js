@@ -1,4 +1,3 @@
-const { get } = require('express/lib/response')
 const db = require('../../data/db-config')
 
 
@@ -13,14 +12,16 @@ const getById = id => {
 const create = account => {
   return db('accounts')
     .insert(account)
-    .then(([id]) => { get(id)});
+    .then(([id]) => {
+      return getById(id)
+    });
 }
 
 const updateById = (id, account) => {
   return db('accounts')
     .where('id', id)
     .update(account)
-    .then((count)=>(count > 0 ? get(id) : null))
+    .then((count)=>(count > 0 ? getById(id) : null))
 }
 
 const deleteById = id => {
