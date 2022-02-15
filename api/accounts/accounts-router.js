@@ -44,7 +44,33 @@ router.post('/', (req, res, next) => {
 })
 
 router.put('/:id', (req, res, next) => {
-  // DO YOUR MAGIC
+  const { name, budget } = req.body;
+  if (!name && !budget) {
+    res.status(400).json({
+      message:
+        "Please provide some info for the project",
+    });
+  } else {
+    Account.getById(req.params.id)
+      .then((project) => {
+        if (!project) {
+          res.status(404).json({
+            message: "The acc with the specified ID does not exist",
+          });
+        } else {
+          return Account.updateById(req.params.id, req.body);
+        }
+      })
+      .then((info) => {
+        if (info) {
+          return Account.getById(req.params.id);
+        }
+      })
+      .then((acc) => {
+        res.status(201).json(acc);
+      })
+      .catch(next);
+  }
 });
 
 router.delete('/:id', (req, res, next) => {
