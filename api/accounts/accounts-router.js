@@ -73,9 +73,21 @@ router.put('/:id', (req, res, next) => {
   }
 });
 
-router.delete('/:id', (req, res, next) => {
-  // DO YOUR MAGIC
-})
+router.delete('/:id', async (req, res, next) => {
+  try {
+    const acc = await Account.getById(req.params.id);
+    if (!acc) {
+      res.status(404).json({
+        message: "The acc with the specified ID does not exist",
+      });
+    } else {
+      await Account.deleteById(req.params.id);
+      res.status(201).json(acc);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.use((err, req, res, next) => { // eslint-disable-line
   res.status(err.status || 500).json({
