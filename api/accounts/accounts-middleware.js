@@ -7,7 +7,7 @@ exports.checkAccountPayload = (req, res, next) => {
   if (name === undefined || budget === undefined) {
     err.message = "name and budget are required";
   } else if (typeof name !== "string") {
-    err.message = "name and budget are required";
+    err.message = "name of account must be a string";
   } else if (name.trim().length < 3 || name.trim().length > 100) {
     err.message = "name of account must be between 3 and 100";
   } else if (typeof budget !== "number" || isNaN(budget)) {
