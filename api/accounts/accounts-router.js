@@ -3,7 +3,6 @@ const router = require('express').Router()
 const Account = require('../accounts/accounts-model')
 
 router.get('/', (req, res, next) => {
-  console.log(req)
   Account.getAll()
     .then((accounts) =>{
       if (!accounts){
@@ -12,16 +11,21 @@ router.get('/', (req, res, next) => {
         res.status(200).json(accounts);
       }
     })
-    .catch(err => {
-      console.log(err)
-      res.status(500).json({
-        message: 'The accounts info could not be retrieved'
-      });
-    })
+    .catch(next);
 })
 
 router.get('/:id', (req, res, next) => {
-  // DO YOUR MAGIC
+  Account.getById(req.params.id)
+    .then((account) => {
+      if (!account) {
+        res.status(404).json({
+          message: "The account with the specified ID does not exist",
+        });
+      } else {
+        res.status(200).json(account);
+      }
+    })
+    .catch(next);
 })
 
 router.post('/', (req, res, next) => {
@@ -37,7 +41,11 @@ router.delete('/:id', (req, res, next) => {
 })
 
 router.use((err, req, res, next) => { // eslint-disable-line
-  // DO YOUR MAGIC
+  res.status(err.status || 500).json({
+    custom: "Info could not be retrieved!",
+    message: err.message,
+    stack: err.stack,
+  });
 })
 
 module.exports = router;
