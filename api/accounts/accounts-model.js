@@ -24,6 +24,7 @@ const updateById = (id, account) => {
     .then((count)=>(count > 0 ? getById(id) : null))
 }
 
+
 const deleteById = id => {
   return db('accounts').where('id', id).del();
 }

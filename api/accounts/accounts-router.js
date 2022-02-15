@@ -25,11 +25,14 @@ router.post(
   middlewares.checkAccountPayload,
   middlewares.checkAccountNameUnique,
   async (req, res, next) => {
-    try{
-      const newAcc = await Account.create(req.body)
-      res.status(201).json(newAcc)
-    } catch (err){
-      next(err)
+    try {
+      const newAcc = await Account.create({
+        name: req.body.name.trim(),
+        budget: req.body.budget,
+      });
+      res.status(201).json(newAcc);
+    } catch (err) {
+      next(err);
     }
   }
 );
@@ -39,17 +42,22 @@ router.put(
   middlewares.checkAccountId,
   middlewares.checkAccountNameUnique,
   middlewares.checkAccountPayload,
-  (req, res, next) => {
-
+  async (req, res, next) => {
+    try {
+      const updated = await Account.updateById(req.params.id, req.body);
+      res.json(updated);
+    } catch (err) {
+      next(err);
+    }
   }
 );
 
 router.delete("/:id", middlewares.checkAccountId, async (req, res, next) => {
-  try{
-    await Account.deleteById(req.params.id)
-    res.json(req.account)
+  try {
+    await Account.deleteById(req.params.id);
+    res.json(req.account);
   } catch (err) {
-    next(err)
+    next(err);
   }
 });
 
