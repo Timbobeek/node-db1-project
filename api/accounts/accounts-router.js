@@ -40,15 +40,12 @@ router.post(
 router.put(
   "/:id",
   middlewares.checkAccountId,
-  middlewares.checkAccountNameUnique,
   middlewares.checkAccountPayload,
-  async (req, res, next) => {
-    try {
-      const updated = await Account.updateById(req.params.id, req.body);
-      res.json(updated);
-    } catch (err) {
-      next(err);
-    }
+  middlewares.checkAccountNameUnique,
+  (req, res, next) => {
+    Account.updateById(req.account.id, req.body)
+      .then((updated) => res.json(updated))
+      .catch(next);
   }
 );
 
